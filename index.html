@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Event Sign-Up | April 19, 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f5f0e8;
+    --ink: #1a1410;
+    --rust: #c4551a;
+    --sage: #4a6741;
+    --gold: #c9a84c;
+    --muted: #7a6e60;
+    --card: #fffdf8;
+    --border: #d9cfc0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Mono', monospace;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 0;
+    overflow-x: hidden;
+  }
+
+  /* Grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0.5;
+  }
+
+  header {
+    border-bottom: 2px solid var(--ink);
+    padding: 28px 48px;
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+  }
+
+  header .tag {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+  }
+
+  .main-layout {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    min-height: calc(100vh - 80px);
+  }
+
+  .form-area {
+    padding: 56px 64px;
+    border-right: 2px solid var(--ink);
+  }
+
+  .step {
+    display: none;
+    animation: fadeUp 0.4s ease forwards;
+  }
+  .step.active { display: block; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .step-label {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 12px;
+  }
+
+  .step h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 8px;
+    max-width: 520px;
+  }
+
+  .step .subtitle {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 48px;
+    line-height: 1.6;
+  }
+
+  /* Step 1 — attendee count */
+  .counter-block {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 48px;
+  }
+
+  .counter-btn {
+    width: 56px;
+    height: 56px;
+    border: 2px solid var(--ink);
+    background: var(--card);
+    font-size: 22px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, color 0.15s;
+    font-family: 'DM Mono', monospace;
+  }
+  .counter-btn:hover { background: var(--ink); color: var(--cream); }
+  .counter-btn:active { transform: scale(0.96); }
+
+  .counter-display {
+    width: 100px;
+    height: 56px;
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 700;
+    background: var(--card);
+  }
+
+  /* Step 2 — meal plan */
+  .meals-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+
+  .meal-card {
+    border: 2px solid var(--border);
+    background: var(--card);
+    padding: 24px;
+    cursor: default;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    position: relative;
+  }
+
+  .meal-card:hover {
+    border-color: var(--ink);
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+
+  .meal-icon {
+    font-size: 28px;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .meal-name {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 4px;
+    color: var(--ink);
+  }
+
+  .meal-desc {
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 18px;
+    line-height: 1.5;
+  }
+
+  .meal-counter {
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+
+  .meal-btn {
+    width: 32px;
+    height: 32px;
+    border: 1.5px solid var(--ink);
+    background: transparent;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, color 0.15s;
+    font-family: 'DM Mono', monospace;
+    line-height: 1;
+  }
+  .meal-btn:hover { background: var(--ink); color: var(--cream); }
+
+  .meal-count {
+    width: 44px;
+    height: 32px;
+    border-top: 1.5px solid var(--ink);
+    border-bottom: 1.5px solid var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 500;
+    background: var(--card);
+  }
+
+  /* Remaining indicator */
+  .remaining-bar {
+    margin-bottom: 32px;
+    padding: 14px 18px;
+    background: var(--ink);
+    color: var(--cream);
+    font-size: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .remaining-bar .count {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+  }
+
+  .remaining-bar.done { background: var(--sage); }
+  .remaining-bar.over { background: var(--rust); }
+
+  /* CTA button */
+  .cta-btn {
+    height: 54px;
+    padding: 0 40px;
+    background: var(--rust);
+    color: white;
+    border: none;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.15s, box-shadow 0.15s;
+  }
+  .cta-btn:hover { background: var(--ink); box-shadow: 4px 4px 0 var(--rust); }
+  .cta-btn:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; box-shadow: none; }
+
+  .back-btn {
+    background: transparent;
+    border: 2px solid var(--border);
+    color: var(--muted);
+    height: 54px;
+    padding: 0 24px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    cursor: pointer;
+    margin-right: 12px;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .back-btn:hover { border-color: var(--ink); color: var(--ink); }
+
+  /* Sidebar summary */
+  .sidebar {
+    padding: 40px 36px;
+    background: var(--card);
+    position: sticky;
+    top: 0;
+    height: calc(100vh - 80px);
+    overflow-y: auto;
+  }
+
+  .sidebar-title {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 16px;
+    margin-bottom: 28px;
+  }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+
+  .summary-row .label { color: var(--muted); }
+  .summary-row .val {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  .summary-meal {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    font-size: 12px;
+    border-bottom: 1px dotted var(--border);
+  }
+
+  .progress-track {
+    height: 4px;
+    background: var(--border);
+    margin: 24px 0;
+    position: relative;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--rust);
+    transition: width 0.3s ease;
+  }
+
+  /* Step 3 — Confirm */
+  .confirm-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 40px;
+    font-size: 13px;
+  }
+  .confirm-table th {
+    text-align: left;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 2px solid var(--ink);
+    padding: 10px 0;
+  }
+  .confirm-table td {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .confirm-table td:last-child { text-align: right; font-weight: 500; }
+
+  .confirm-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 20px 0 0;
+    border-top: 2px solid var(--ink);
+    margin-bottom: 40px;
+  }
+  .confirm-total .label { font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; }
+  .confirm-total .val {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 900;
+  }
+
+  /* Step 4 — Success */
+  .success-wrap {
+    text-align: center;
+    padding-top: 32px;
+  }
+  .success-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+    display: block;
+    animation: pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  }
+  @keyframes pop {
+    from { transform: scale(0); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  /* Steps indicator */
+  .steps-indicator {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 48px;
+  }
+  .step-dot {
+    width: 28px;
+    height: 4px;
+    background: var(--border);
+    transition: background 0.3s;
+  }
+  .step-dot.done { background: var(--rust); }
+  .step-dot.active { background: var(--gold); }
+
+  .error-msg {
+    color: var(--rust);
+    font-size: 11px;
+    margin-top: 8px;
+    letter-spacing: 0.05em;
+  }
+
+  /* Input fields */
+  .field-group {
+    margin-bottom: 28px;
+  }
+  .field-label {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .field-input {
+    width: 100%;
+    height: 48px;
+    border: 2px solid var(--border);
+    background: var(--card);
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    color: var(--ink);
+    padding: 0 16px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .field-input:focus { border-color: var(--ink); }
+  .field-input.error { border-color: var(--rust); }
+  textarea.field-input {
+    height: 120px;
+    padding: 14px 16px;
+    resize: vertical;
+    line-height: 1.6;
+  }
+  .fields-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .children-list { margin-bottom: 16px; }
+  .child-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .child-row .field-input { margin: 0; }
+  .remove-child {
+    width: 36px;
+    height: 48px;
+    border: 2px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-size: 18px;
+    cursor: pointer;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .remove-child:hover { border-color: var(--rust); color: var(--rust); }
+  .add-child-btn {
+    background: transparent;
+    border: 2px dashed var(--border);
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    padding: 10px 20px;
+    cursor: pointer;
+    width: 100%;
+    transition: border-color 0.15s, color 0.15s;
+    margin-bottom: 32px;
+  }
+  .add-child-btn:hover { border-color: var(--ink); color: var(--ink); }
+
+  /* Confirm table extras */
+  .confirm-section-title {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 20px 0 8px;
+  }
+  .confirm-detail {
+    font-size: 13px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+  }
+  .confirm-detail .label { color: var(--muted); }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="tag">Registration</span>
+  <h1>Meydenbauer Center — April 19, 2026</h1>
+</header>
+
+<div class="main-layout">
+
+  <!-- LEFT: FORM -->
+  <div class="form-area">
+
+    <!-- STEP 1: Attendee Count -->
+    <div class="step active" id="step1">
+      <div class="steps-indicator">
+        <div class="step-dot active"></div>
+        <div class="step-dot"></div>
+        <div class="step-dot"></div>
+        <div class="step-dot"></div>
+        <div class="step-dot"></div>
+      </div>
+      <div class="step-label">Step 01 of 05</div>
+      <h2>How many guests are joining?</h2>
+      <p class="subtitle">Enter the total number of attendees you'd like to register for the event.</p>
+
+      <div class="counter-block">
+        <button class="counter-btn" onclick="changeTotal(-1)">−</button>
+        <div class="counter-display" id="totalDisplay">1</div>
+        <button class="counter-btn" onclick="changeTotal(1)">+</button>
+      </div>
+
+      <button class="cta-btn" onclick="goToStep2()">Continue →</button>
+    </div>
+
+    <!-- STEP 2: Meal Plans -->
+    <div class="step" id="step2">
+      <div class="steps-indicator">
+        <div class="step-dot done"></div>
+        <div class="step-dot active"></div>
+        <div class="step-dot"></div>
+        <div class="step-dot"></div>
+        <div class="step-dot"></div>
+      </div>
+      <div class="step-label">Step 02 of 05</div>
+      <h2>Assign meal plans.</h2>
+      <p class="subtitle">Distribute your <span id="totalLabel">1</span> guest(s) across the available meal options.</p>
+
+      <div class="remaining-bar" id="remainingBar">
+        <span>Guests unassigned</span>
+        <span class="count" id="remainingCount">1</span>
+      </div>
+
+      <div class="meals-grid">
+        <!-- Default -->
+        <div class="meal-card">
+          <span class="meal-icon">🍽️</span>
+          <div class="meal-name">Default</div>
+          <div class="meal-desc">A full balanced menu with no dietary restrictions.</div>
+          <div class="meal-counter">
+            <button class="meal-btn" onclick="changeMeal('default',-1)">−</button>
+            <div class="meal-count" id="count-default">0</div>
+            <button class="meal-btn" onclick="changeMeal('default',1)">+</button>
+          </div>
+        </div>
+        <!-- Dairy-Free -->
+        <div class="meal-card">
+          <span class="meal-icon">🥛</span>
+          <div class="meal-name">Dairy-Free</div>
+          <div class="meal-desc">No milk, cheese, butter or other dairy products.</div>
+          <div class="meal-counter">
+            <button class="meal-btn" onclick="changeMeal('dairy',−1)">−</button>
+            <div class="meal-count" id="count-dairy">0</div>
+            <button class="meal-btn" onclick="changeMeal('dairy',1)">+</button>
+          </div>
+        </div>
+        <!-- Vegetarian -->
+        <div class="meal-card">
+          <span class="meal-icon">🥗</span>
+          <div class="meal-name">Vegetarian</div>
+          <div class="meal-desc">No meat or fish, includes dairy and eggs.</div>
+          <div class="meal-counter">
+            <button class="meal-btn" onclick="changeMeal('veg',-1)">−</button>
+            <div class="meal-count" id="count-veg">0</div>
+            <button class="meal-btn" onclick="changeMeal('veg',1)">+</button>
+          </div>
+        </div>
+        <!-- Vegan -->
+        <div class="meal-card">
+          <span class="meal-icon">🌱</span>
+          <div class="meal-name">Vegan</div>
+          <div class="meal-desc">No animal products of any kind.</div>
+          <div class="meal-counter">
+            <button class="meal-btn" onclick="changeMeal('vegan',-1)">−</button>
+            <div class="meal-count" id="count-vegan">0</div>
+            <button class="meal-btn" onclick="changeMeal('vegan',1)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="mealError" class="error-msg" style="display:none; margin-bottom: 16px;"></div>
+
+      <button class="back-btn" onclick="goToStep(1)">← Back</button>
+      <button class="cta-btn" id="step2Cta" onclick="goToStep3()">Continue →</button>
+    </div>
+
+    <!-- STEP 3: Contact Info -->
+    <div class="step" id="step3">
+      <div class="steps-indicator">
+        <div class="step-dot done"></div>
+        <div class="step-dot done"></div>
+        <div class="step-dot active"></div>
+        <div class="step-dot"></div>
+        <div class="step-dot"></div>
+      </div>
+      <div class="step-label">Step 03 of 05</div>
+      <h2>Parent details.</h2>
+      <p class="subtitle">Please provide your contact information and your children's names.</p>
+
+      <div class="fields-row">
+        <div class="field-group">
+          <label class="field-label">Parent name *</label>
+          <input class="field-input" id="parentName" type="text" placeholder="Full name">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Phone number *</label>
+          <input class="field-input" id="parentPhone" type="tel" placeholder="+1 (000) 000-0000">
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Email address *</label>
+        <input class="field-input" id="parentEmail" type="email" placeholder="you@example.com">
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Children's names *</label>
+        <div class="children-list" id="childrenList">
+          <div class="child-row">
+            <input class="field-input" type="text" placeholder="Child's full name">
+          </div>
+        </div>
+        <button class="add-child-btn" onclick="addChild()">+ Add another child</button>
+      </div>
+
+      <div id="contactError" class="error-msg" style="display:none; margin-bottom:16px;"></div>
+
+      <button class="back-btn" onclick="goToStep(2)">← Back</button>
+      <button class="cta-btn" onclick="goToStep4()">Continue →</button>
+    </div>
+
+    <!-- STEP 4: Allergies -->
+    <div class="step" id="step4">
+      <div class="steps-indicator">
+        <div class="step-dot done"></div>
+        <div class="step-dot done"></div>
+        <div class="step-dot done"></div>
+        <div class="step-dot active"></div>
+        <div class="step-dot"></div>
+      </div>
+      <div class="step-label">Step 04 of 05</div>
+      <h2>Allergies & dietary needs.</h2>
+      <p class="subtitle">Please list any allergies or dietary requirements we should be aware of. Leave blank if none.</p>
+
+      <div class="field-group">
+        <label class="field-label">Allergies / dietary requirements</label>
+        <textarea class="field-input" id="allergies" placeholder="e.g. peanut allergy (John), gluten-free (Sarah)..."></textarea>
+      </div>
+
+      <div id="allergyError" class="error-msg" style="display:none; margin-bottom:16px;"></div>
+
+      <button class="back-btn" onclick="goToStep(3)">← Back</button>
+      <button class="cta-btn" onclick="goToStep5()">Review →</button>
+    </div>
+
+    <!-- STEP 5: Review -->
+    <div class="step" id="step5">
+      <div class="steps-indicator">
+        <div class="step-dot done"></div>
+        <div class="step-dot done"></div>
+        <div class="step-dot done"></div>
+        <div class="step-dot done"></div>
+        <div class="step-dot active"></div>
+      </div>
+      <div class="step-label">Step 05 of 05</div>
+      <h2>Review & confirm.</h2>
+      <p class="subtitle">Check your registration details before submitting.</p>
+
+      <div class="confirm-section-title">Contact</div>
+      <div class="confirm-detail"><span class="label">Parent</span><span id="confirmName">—</span></div>
+      <div class="confirm-detail"><span class="label">Phone</span><span id="confirmPhone">—</span></div>
+      <div class="confirm-detail"><span class="label">Email</span><span id="confirmEmail">—</span></div>
+      <div class="confirm-detail"><span class="label">Children</span><span id="confirmChildren" style="text-align:right; max-width:60%">—</span></div>
+
+      <div class="confirm-section-title">Meal Plans</div>
+      <table class="confirm-table">
+        <thead>
+          <tr>
+            <th>Meal Plan</th>
+            <th style="text-align:right;">Guests</th>
+          </tr>
+        </thead>
+        <tbody id="confirmBody"></tbody>
+      </table>
+
+      <div class="confirm-detail" style="margin-bottom:8px;"><span class="label">Allergies</span><span id="confirmAllergies" style="text-align:right; max-width:60%">None</span></div>
+
+      <div class="confirm-total">
+        <span class="label">Total Attendees</span>
+        <span class="val" id="confirmTotal">—</span>
+      </div>
+
+      <button class="back-btn" onclick="goToStep(4)">← Back</button>
+      <button class="cta-btn" onclick="submitForm()">Confirm Registration ✓</button>
+    </div>
+
+    <!-- STEP 6: Success -->
+    <div class="step" id="step6">
+      <div class="steps-indicator">
+        <div class="step-dot done"></div>
+        <div class="step-dot done"></div>
+        <div class="step-dot done"></div>
+        <div class="step-dot done"></div>
+        <div class="step-dot done"></div>
+      </div>
+      <div class="success-wrap">
+        <span class="success-icon">🎉</span>
+        <h2 style="margin-bottom:12px;">You're registered!</h2>
+        <p class="subtitle" style="max-width:360px; margin: 0 auto 40px;">Your <span id="successCount"></span> guest(s) have been successfully enrolled. A confirmation will be sent shortly.</p>
+        <button class="cta-btn" onclick="resetForm()">Register Another Group</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT: SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-title">Registration Summary</div>
+
+    <div class="summary-row">
+      <span class="label">Total Guests</span>
+      <span class="val" id="sidTotal">—</span>
+    </div>
+
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill" style="width:0%"></div>
+    </div>
+
+    <div style="font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); margin-bottom: 16px;">Meal Breakdown</div>
+
+    <div class="summary-meal">
+      <span>🍽️ Default</span>
+      <span id="sid-default">—</span>
+    </div>
+    <div class="summary-meal">
+      <span>🥛 Dairy-Free</span>
+      <span id="sid-dairy">—</span>
+    </div>
+    <div class="summary-meal">
+      <span>🥗 Vegetarian</span>
+      <span id="sid-veg">—</span>
+    </div>
+    <div class="summary-meal">
+      <span>🌱 Vegan</span>
+      <span id="sid-vegan">—</span>
+    </div>
+
+    <div style="margin-top:40px; padding-top:20px; border-top:1px solid var(--border);">
+      <div style="font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); margin-bottom: 12px;">Event Details</div>
+      <div style="font-size:12px; color:var(--muted); line-height:2;">
+        📅 Sunday, April 19, 2026<br>
+        📍 Meydenbauer Center<br>
+        11100 NE 6th St, Bellevue, WA 98004<br>
+        🕕 Check-In: 9:45 AM | Program: 10:30 AM<br>
+        🎟️ RSVP Deadline: Friday, April 10
+      </div>
+    </div>
+  </aside>
+
+</div>
+
+<script>
+  const meals = { default: 0, dairy: 0, veg: 0, vegan: 0 };
+  const mealNames = {
+    default: 'Default',
+    dairy: 'Dairy-Free',
+    veg: 'Vegetarian',
+    vegan: 'Vegan'
+  };
+  const mealIcons = { default:'🍽️', dairy:'🥛', veg:'🥗', vegan:'🌱' };
+  let total = 1;
+
+  function changeTotal(d) {
+    total = Math.max(1, total + d);
+    document.getElementById('totalDisplay').textContent = total;
+    updateSidebar();
+  }
+
+  function changeMeal(key, d) {
+    const newVal = meals[key] + d;
+    const assigned = Object.values(meals).reduce((a,b)=>a+b,0);
+    const remaining = total - assigned;
+    if (newVal < 0) return;
+    if (d > 0 && remaining <= 0) return;
+    meals[key] = newVal;
+    document.getElementById('count-' + key).textContent = newVal;
+    updateRemaining();
+    updateSidebar();
+  }
+
+  function updateRemaining() {
+    const assigned = Object.values(meals).reduce((a,b)=>a+b,0);
+    const rem = total - assigned;
+    const bar = document.getElementById('remainingBar');
+    document.getElementById('remainingCount').textContent = rem;
+    bar.className = 'remaining-bar';
+    if (rem === 0) {
+      bar.classList.add('done');
+      bar.querySelector('span').textContent = 'All guests assigned ✓';
+    } else if (rem < 0) {
+      bar.classList.add('over');
+      bar.querySelector('span').textContent = 'Too many assigned!';
+    } else {
+      bar.querySelector('span').textContent = 'Guests unassigned';
+    }
+  }
+
+  function updateSidebar() {
+    document.getElementById('sidTotal').textContent = total;
+    const assigned = Object.values(meals).reduce((a,b)=>a+b,0);
+    const pct = total > 0 ? (assigned / total) * 100 : 0;
+    document.getElementById('progressFill').style.width = Math.min(100, pct) + '%';
+    for (const k of ['default','dairy','veg','vegan']) {
+      document.getElementById('sid-' + k).textContent = meals[k] || '—';
+    }
+  }
+
+  function goToStep2() {
+    document.getElementById('totalLabel').textContent = total;
+    Object.keys(meals).forEach(k => { meals[k] = 0; document.getElementById('count-'+k).textContent = 0; });
+    updateRemaining();
+    goToStep(2);
+  }
+
+  function goToStep3() {
+    const assigned = Object.values(meals).reduce((a,b)=>a+b,0);
+    const err = document.getElementById('mealError');
+    if (assigned !== total) {
+      err.style.display = 'block';
+      err.textContent = assigned < total
+        ? `Please assign ${total - assigned} more guest(s) to a meal plan.`
+        : `You've assigned ${assigned - total} too many. Please reduce.`;
+      return;
+    }
+    err.style.display = 'none';
+    goToStep(3);
+  }
+
+  function goToStep4() {
+    const err = document.getElementById('contactError');
+    const name = document.getElementById('parentName').value.trim();
+    const phone = document.getElementById('parentPhone').value.trim();
+    const email = document.getElementById('parentEmail').value.trim();
+    const childInputs = document.querySelectorAll('#childrenList .field-input');
+    const children = Array.from(childInputs).map(i => i.value.trim()).filter(Boolean);
+
+    if (!name || !phone || !email || children.length === 0) {
+      err.style.display = 'block';
+      err.textContent = 'Please fill in all required fields and at least one child\'s name.';
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      err.style.display = 'block';
+      err.textContent = 'Please enter a valid email address.';
+      return;
+    }
+    err.style.display = 'none';
+    goToStep(4);
+  }
+
+  function goToStep5() {
+    // Build confirm table
+    const tbody = document.getElementById('confirmBody');
+    tbody.innerHTML = '';
+    for (const [k, count] of Object.entries(meals)) {
+      if (count === 0) continue;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${mealIcons[k]} ${mealNames[k]}</td><td>${count} guest${count!==1?'s':''}</td>`;
+      tbody.appendChild(tr);
+    }
+    if (tbody.innerHTML === '') {
+      tbody.innerHTML = '<tr><td colspan="2" style="color:var(--muted); font-size:12px;">No guests assigned.</td></tr>';
+    }
+
+    const childInputs = document.querySelectorAll('#childrenList .field-input');
+    const children = Array.from(childInputs).map(i => i.value.trim()).filter(Boolean);
+
+    document.getElementById('confirmName').textContent = document.getElementById('parentName').value.trim();
+    document.getElementById('confirmPhone').textContent = document.getElementById('parentPhone').value.trim();
+    document.getElementById('confirmEmail').textContent = document.getElementById('parentEmail').value.trim();
+    document.getElementById('confirmChildren').textContent = children.join(', ') || '—';
+    document.getElementById('confirmTotal').textContent = total;
+    const allergies = document.getElementById('allergies').value.trim();
+    document.getElementById('confirmAllergies').textContent = allergies || 'None';
+    goToStep(5);
+  }
+
+  function addChild() {
+    const list = document.getElementById('childrenList');
+    const row = document.createElement('div');
+    row.className = 'child-row';
+    row.innerHTML = `<input class="field-input" type="text" placeholder="Child's full name">
+      <button class="remove-child" onclick="this.parentElement.remove()">&times;</button>`;
+    list.appendChild(row);
+  }
+
+  function goToStep(n) {
+    document.querySelectorAll('.step').forEach((el, i) => {
+      el.classList.toggle('active', i + 1 === n);
+    });
+  }
+
+  function submitForm() {
+    const btn = document.querySelector('#step5 .cta-btn');
+    btn.disabled = true;
+    btn.textContent = 'Submitting...';
+
+    const SHEET_URL = 'https://script.google.com/macros/s/AKfycbz7DsBPmYgRQFrl_FJMCfVZyEF4c3pwt-N0dl-sYUeOb1WvXSuQrWFXB3atOjbsatXO/exec';
+
+    // Hidden iframe to catch the form response without navigating away
+    const iframeName = 'submit_frame_' + Date.now();
+    const iframe = document.createElement('iframe');
+    iframe.name = iframeName;
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+
+    // Hidden form — works from local files, preserves all params through Google's redirect
+    const form = document.createElement('form');
+    form.method = 'GET';
+    form.action = SHEET_URL;
+    form.target = iframeName;
+
+    const childInputs = document.querySelectorAll('#childrenList .field-input');
+    const children = Array.from(childInputs).map(i => i.value.trim()).filter(Boolean).join(', ');
+
+    const fields = {
+      total: total,
+      default: meals.default,
+      dairy: meals.dairy,
+      veg: meals.veg,
+      vegan: meals.vegan,
+      parent_name: document.getElementById('parentName').value.trim(),
+      phone: document.getElementById('parentPhone').value.trim(),
+      email: document.getElementById('parentEmail').value.trim(),
+      children: children,
+      allergies: document.getElementById('allergies').value.trim() || 'None'
+    };
+
+    for (const [key, val] of Object.entries(fields)) {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = key;
+      input.value = val;
+      form.appendChild(input);
+    }
+
+    document.body.appendChild(form);
+    form.submit();
+
+    // Clean up and advance to success after short delay
+    setTimeout(() => {
+      document.getElementById('successCount').textContent = total;
+      goToStep(6);
+      btn.disabled = false;
+      btn.textContent = 'Confirm Registration ✓';
+      form.remove();
+      iframe.remove();
+    }, 1000);
+  }
+
+  function resetForm() {
+    total = 1;
+    Object.keys(meals).forEach(k => meals[k] = 0);
+    document.getElementById('totalDisplay').textContent = 1;
+    document.getElementById('parentName').value = '';
+    document.getElementById('parentPhone').value = '';
+    document.getElementById('parentEmail').value = '';
+    document.getElementById('allergies').value = '';
+    document.getElementById('childrenList').innerHTML = '<div class=\'child-row\'><input class=\'field-input\' type=\'text\' placeholder=\'Child name\'></div>';
+    updateSidebar();
+    goToStep(1);
+  }
+
+  updateSidebar();
+</script>
+</body>
+</html>
